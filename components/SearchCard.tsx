@@ -8,9 +8,10 @@ interface SearchCardProps {
   searchPhrase: string | any,
   setSearchPhrase: string | any,
   setClicked: boolean | any,
+  search: Function | any
 }
 const SearchCard = (props: SearchCardProps) => {
-  const { clicked, searchPhrase, setSearchPhrase, setClicked} = props
+  const {search, clicked, searchPhrase, setSearchPhrase, setClicked} = props
   return (
     <View style={styles.container}>
       <View
@@ -25,7 +26,8 @@ const SearchCard = (props: SearchCardProps) => {
           name="search"
           size={20}
           color="black"
-          style={{ marginLeft: 1 }}
+          style={{ marginLeft: 1 }} 
+          onPress={search}
         />
         {/* Input field */}
         <TextInput

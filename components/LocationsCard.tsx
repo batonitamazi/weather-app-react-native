@@ -12,7 +12,7 @@ function LocationsCard(props: locationProps) {
     return (
         <View style={styles.container}>
             <Text style={styles.city}>{weath.city || city}</Text>
-            <Text style={styles.weather}>{parseInt(weath.main) || weather}</Text>
+            <Text style={styles.weather}>{weath.main}</Text>
         </View>
     )
 }

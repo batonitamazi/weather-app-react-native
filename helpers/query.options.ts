@@ -13,7 +13,7 @@ export class QueryOptions implements QueryBuilder {
 	toQueryMap() {
 		const queryMap = new Map<string, string>()
 		if(this.city !==undefined){
-			queryMap.set('city', `${this.city}`)
+			queryMap.set('q', `${this.city}`)
 		}
 		
 		if (this.lat !== undefined) {

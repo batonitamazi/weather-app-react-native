@@ -29,6 +29,7 @@ export default function App() {
     let locations = await Location.getCurrentPositionAsync({});
     setLat(locations.coords.latitude)
     setLon(locations.coords.longitude)
+
   }
   const getWeather = () => {
     const options = new QueryOptions();
@@ -39,19 +40,24 @@ export default function App() {
       setWeather(r)
     })
   }
-  const getCurrentCityWeather = (city: string) => {
+  const getCurrentCityWeather = () => {
     const options = new QueryOptions();
-    options.city = `${city}`
+    options.city = `${searchPhrase}`
     options.appid = `${environment.key}`
     weatherService.list(options).then((result: any) => {
       setWeather(result)
     })
   }
+  const handleSearch = () => {
+    getCurrentCityWeather();
+    setClicked(false)
+    setSearchPhrase("")
+  }
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     try {
-      getWeather();
+      getWeather()
       setRefreshing(false)
     }
     catch (error) {
@@ -60,10 +66,13 @@ export default function App() {
   }, [refreshing])
 
   useEffect(() => {
-    getLocation();
     getWeather();
+    getLocation();
+    if (searchPhrase !== "") {
+      getCurrentCityWeather();
+    }
   }, [])
-  console.log(searchPhrase)
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -77,9 +86,10 @@ export default function App() {
             setSearchPhrase={setSearchPhrase}
             clicked={clicked}
             setClicked={setClicked}
-            />
+            search={handleSearch}
+          />
           <LocationsCard weath={weather} />
-          <WeatherCard />
+          <WeatherCard weather={weather}/>
           <TemperatureCard temperature={weather} />
           <InfoCard info={weather} />
         </View>

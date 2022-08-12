@@ -2,7 +2,7 @@ import { Resource } from "../resource";
 
 export class Weather extends Resource {
     temperature: number | any 
-    main: string | undefined
+    main: string | any
     temperature_min: number | undefined
     temperature_max: number | undefined
     wind: number | undefined 
