@@ -15,7 +15,7 @@ export class WeatherSerializer implements Serializer {
         weather.humidity = json.main.humidity 
         weather.country = json.sys.country 
         weather.city = json.name
-        console.log(weather)
+        weather.hour = json.dt_txt
         return weather
     }
 }

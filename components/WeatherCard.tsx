@@ -1,7 +1,5 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { Feather, Fontisto, Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, View, Text } from 'react-native';
+import React from 'react';
 interface WeatherCardProps {
     weather: [] | any
 }
@@ -9,63 +7,52 @@ interface WeatherCardProps {
 function WeatherCard(props: WeatherCardProps) {
     const { weather } = props
     return (
-        <View style={styles.skyContainer}>
-            <View>
-                {(() => {
-
-                    switch (weather?.main) {
-                        case 'Clouds':
-                            return (
-                                <FontAwesome name="cloud" size={104} color="white" style={{ zIndex: 100, }} />
-                            )
-                        case 'Clear':
-                            return (
-                                <Feather name="sun" size={104} color="orange" />
-                            )
-                        case 'Snow':
-                            return (
-                                <Feather name="cloud-snow" size={104} color="white" />
-                            )
-                        case 'Rain':
-                            return (
-                                <Feather name="cloud-rain" size={104} color="white" />
-                            )
-                        case 'Fog':
-                            return (
-                                <Fontisto name="fog" size={104} color="white" />
-                            )
-                        default:
-                            return (
-                                <Feather name="sun" size={104} color="orange" />
-                            )
-                    }
-
-                })()}
-
+        <View style={styles.container}>
+            <Text style={styles.cityText}>{weather.city}</Text>
+            <View style={{alignItems: 'center'}}>
+                <Text style={styles.temperatureText}>{Math.floor(weather.temperature)}°</Text>
+                <Text style={styles.weatherText}>{weather.main}</Text>
+                <View style={styles.minMaxContainer}>
+                    <Text style={styles.minMaxText}>H:{Math.floor(weather.temperature_max)}°</Text>
+                    <Text style={styles.minMaxText}>L:{Math.floor(weather.temperature_min)}°</Text>
+                </View>
             </View>
+
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    skyContainer: {
+    container: {
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        width: '60%',
-        height: '35%',
-        position: 'relative',
-        backgroundColor: '#00ced1',
-        borderTopRightRadius: 110,
-        borderTopLeftRadius: 200,
-        borderBottomLeftRadius: 90,
-        borderBottomRightRadius: 170,
     },
-    sunContainer: {
-        width: '40%',
-        height: '40%',
-        backgroundColor: 'orange',
-        borderRadius: 180,
+    cityText: {
+        fontWeight: "400",
+        fontSize: 34,
+        fontFamily: 'Al Nile',
+        color: '#FFFFFF',
     },
+    temperatureText: {
+        fontWeight: "200",
+        fontSize: 96,
+        color: '#FFFFFF',
+    },
+    weatherText: {
+        fontWeight: "600",
+        fontSize: 20,
+        fontFamily: 'Al Nile',
+        color: '#a9a9a9',
+    },
+    minMaxContainer: {
+        flexDirection: 'row',
+    },
+    minMaxText: {
+        fontWeight: "200",
+        fontSize: 18,
+        fontFamily: 'Al Nile',
+        color: '#FFFFFF',
+    }
 })
 
 export default WeatherCard

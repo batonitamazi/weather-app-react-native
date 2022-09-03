@@ -9,4 +9,5 @@ export class Weather extends Resource {
     humidity: number | undefined
     country: string | undefined
     city: string | undefined 
+    hour: string | undefined
 }

@@ -15,7 +15,6 @@ export class QueryOptions implements QueryBuilder {
 		if(this.city !==undefined){
 			queryMap.set('q', `${this.city}`)
 		}
-		
 		if (this.lat !== undefined) {
 			queryMap.set('lat', `${this.lat}`);
 		}
