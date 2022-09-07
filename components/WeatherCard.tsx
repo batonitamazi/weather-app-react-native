@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     cityText: {
         fontWeight: "400",
         fontSize: 34,
-        fontFamily: 'Al Nile',
         color: '#FFFFFF',
     },
     temperatureText: {
@@ -41,7 +40,6 @@ const styles = StyleSheet.create({
     weatherText: {
         fontWeight: "600",
         fontSize: 20,
-        fontFamily: 'Al Nile',
         color: '#a9a9a9',
     },
     minMaxContainer: {
@@ -50,7 +48,6 @@ const styles = StyleSheet.create({
     minMaxText: {
         fontWeight: "200",
         fontSize: 18,
-        fontFamily: 'Al Nile',
         color: '#FFFFFF',
     }
 })

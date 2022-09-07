@@ -1,90 +1,118 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import BottomSheet from '@gorhom/bottom-sheet';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FontAwesome } from '@expo/vector-icons';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import HourlyForecast from './HourlyForecast';
+import DailyForecast from './DailyForecast'
+
 
 interface bottomSheetProps {
     forecas: [] | any
 }
 
+const tabs = [
+    {
+        name: 'Hourly Forecast',
+        label: 'Hourly Forecast',
+        component: <HourlyForecast hourlyForecast={undefined} />
+    },
+    {
+        name: 'Daily Forecast',
+        label: 'Daily Forecast',
+        component: <HourlyForecast hourlyForecast={undefined} />
+    }
+]
+
+
 function BottomSheetComponent(props: bottomSheetProps) {
     const { forecas } = props
     const bottomSheetRef = useRef<BottomSheet>(null);
-    const [hourlyForecast, setHourlyForecast] = useState(true)
-    const [dailyForecast, setDailyForecast] = useState(false)
+    const [active, setActive] = useState(0)
     const handleSheetChanges = useCallback((index: number) => {
-        // console.log('handleSheetChanges', index);
     }, []);
-
+    const snapPoints = useMemo(() => ['70%', '100%'], []);
 
     const showHourlyForecast = () => {
-        setDailyForecast(false)
-        setHourlyForecast(true)
+        setActive(0)
     }
     const showDailyForecast = () => {
-        setHourlyForecast(false)
-        setDailyForecast(true)
+        setActive(1)
     }
-    
+
+
+
     return (
         <BottomSheet
             ref={bottomSheetRef}
             index={1}
-            snapPoints={['70%', '100%']}
+            snapPoints={snapPoints}
             onChange={handleSheetChanges}
+            style={{ flex: 1 }}
         >
             <LinearGradient
                 style={styles.bottomcontentContainer}
-                colors={['#1C1B33', '#362A84']}
+                colors={['#2E335A', '#45278B']}
             >
                 <View style={styles.textContainer}>
-                    <TouchableOpacity
+                    {tabs?.map((item: any, index: number) => {
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                            >
+                                <Text style={styles.textStyle}>{item.label}</Text>
+                            </TouchableOpacity>
+                        )
+                    })}
+                    {/* <TouchableOpacity
                         onPress={showHourlyForecast}
                     >
                         <Text style={styles.textStyle}>Hourly Forecast</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={showDailyForecast}
-
                     >
                         <Text style={styles.textStyle}>Daily Forecast</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                </View>
+                <View style={{
+                    width: '100%', backgroundColor: '#5936B4', height: 1, flexDirection: 'row', justifyContent: 'space-between',
+                }}>
+                    <Animated.View style={{
+                        width: '35%',
+                        backgroundColor: active === 0 ? "#007aff" : '#5936B4',
+                        height: active === 0 ? 3 : 1,
+                        borderRadius: 10,
+                        shadowColor: '#ffffff',
+                        shadowOffset: { width: 4, height: -4 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 5,
+                    }}
+                    >
+                    </Animated.View>
+                    <Animated.View style={{
+                        backgroundColor: active === 1 ? "#007aff" : '#5936B4',
+                        width: '35%',
+                        height: active === 1 ? 3 : 1,
+                        borderRadius: 10,
+                        shadowColor: active === 1 ? '#ffffff' : '#000000',
+                        shadowOffset: { width: 4, height: -4 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 5,
+                    }}
+                    >
+                    </Animated.View>
                 </View>
                 <View>
                     <ScrollView
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         style={styles.weatherContainer}
-
                     >
-
-                        {hourlyForecast && forecas.filter((item: any, index: number) => {
-                            return index < 9;
-                        }).map((item: any, index: number) => {
-                            return (
-                                <TouchableOpacity key={index} style={styles.miniWeatherCard}>
-                                    <Text style={styles.hourlyText}>{item.hour.slice(11, 16)}</Text>
-                                    <Image source={require('../assets/raining.png')} style={{ width: 50, height: 50 }} />
-                                    <Text style={styles.weatherText}>{Math.floor(item.temperature)}°</Text>
-                                </TouchableOpacity>
-                            )
-                        })}
-                        {dailyForecast && forecas.map((item: any, index: number) => {
-                                return (
-                                    <TouchableOpacity key={index} style={styles.miniWeatherCard}>
-                                        <Text style={styles.hourlyText}>{item.hour.slice(11, 16)}</Text>
-                                        <Image source={require('../assets/raining.png')} style={{ width: 50, height: 50 }} />
-                                        <Text style={styles.weatherText}>{Math.floor(item.temperature)}°</Text>
-                                    </TouchableOpacity>
-                                )
-                            }
-
-                        )}
-
+                        <DailyForecast dailyForecast={forecas} />
                     </ScrollView>
                 </View>
+
             </LinearGradient>
         </BottomSheet>
     );
@@ -98,16 +126,8 @@ const styles = StyleSheet.create({
     textStyle: {
         color: '#a9a9a9',
         fontSize: 17,
-        fontFamily: 'Al Nile',
     },
-    hourlyText: {
-        color: '#FFFFFF',
-        fontSize: 15,
-    },
-    weatherText: {
-        color: '#FFFFFF',
-        fontSize: 20,
-    },
+
     textContainer: {
         paddingTop: 10,
         flexDirection: 'row',
@@ -117,24 +137,24 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     weatherContainer: {
-        marginTop: 20,
-        height: '35%',
+        marginTop: 10,
+        height: '32%',
         marginHorizontal: 5,
     },
-    miniWeatherCard: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        flexDirection: 'column',
-        width: 60,
-        backgroundColor: '#48319D',
-        height: '90%',
-        borderStyle: 'solid',
-        borderColor: '#C427FB',
-        borderWidth: 1,
-        margin: 7,
-        borderRadius: 30
+    bottomNavigation: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: 'grey',
+        width: '100%',
+        height: '10%',
     },
+    bottomSheet: {
+        flex: 1,
+    },
+
+
 })
 
 export default BottomSheetComponent
+
+

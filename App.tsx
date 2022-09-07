@@ -1,14 +1,19 @@
 import 'react-native-gesture-handler'
-import { StyleSheet, ImageBackground, Text, ScrollView, RefreshControl, View, Image } from 'react-native';
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { StyleSheet, ImageBackground, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import * as Location from 'expo-location'
 import { QueryOptions } from './helpers/query.options';
 import { environment } from './environment/environment';
 import { weatherService } from './models/weather/service';
 import { Weather } from './models/weather/weather';
 import WeatherCard from './components/WeatherCard';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Dimensions } from 'react-native';
 import BottomSheetComponent from './components/BottomSheet';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+
+
+const windowHeight = Dimensions.get('screen').height;
 
 
 
@@ -16,9 +21,9 @@ import BottomSheetComponent from './components/BottomSheet';
 export default function App() {
   const [errorMsg, setErrorMsg] = useState("");
   const [searchPhrase, setSearchPhrase] = useState("");
-  const [clicked, setClicked] = useState(false);
   const [weather, setWeather] = useState<Weather[]>([])
   const [forecast, setForecast] = useState<Weather[]>([])
+
 
 
   const [lat, setLat] = useState(41.715147)
@@ -46,7 +51,7 @@ export default function App() {
       setWeather(r)
     })
   }
-  const getForecast =() => {
+  const getForecast = () => {
     const options = new QueryOptions();
     options.lat = `41.7151`
     options.lon = `44.8271`
@@ -64,7 +69,7 @@ export default function App() {
   //     setWeather(result)
   //   })
   // }
-  
+
   // const handleSearch = () => {
   //   getCurrentCityWeather();
   //   setClicked(false)
@@ -90,27 +95,34 @@ export default function App() {
     // }
   }, [])
   return (
-    <View style={{backgroundColor: '#48319D'}}>
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+    <View style={styles.contentContainer}>
         <ImageBackground source={require('./assets/background.jpg')} resizeMode="cover" style={styles.image}>
           <View style={styles.container}>
             <WeatherCard weather={weather} />
             <View style={styles.secondContainer}>
               <View style={styles.imageContainer}>
-                <Image source={require('./assets/house.png')} style={styles.house}/>
+                <Image source={require('./assets/house.png')} style={styles.house} />
               </View>
+
               <View style={styles.bottomSheetView}>
-                <BottomSheetComponent forecas={forecast}/>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <BottomSheetComponent forecas={forecast} />
+                  <View style={styles.footerContainer}>
+                    <TouchableOpacity>
+                      <Image source={require('./assets/location.png')} style={{ width: 50, height: 50 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.plusContainer}>
+                      <Image source={require('./assets/plusIcon.png')} style={{ width: 80, height: 80 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Image source={require('./assets/hamburger.png')} style={{ width: 50, height: 50 }} />
+                    </TouchableOpacity>
+                  </View>
+                </GestureHandlerRootView>
               </View>
             </View>
           </View>
         </ImageBackground>
-      </ScrollView>
     </View>
   );
 }
@@ -128,10 +140,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: '100%',
+    backgroundColor: '#48319D',
   },
   house: {
     width: 300,
-    zIndex: 2,
     height: 300,
   },
   secondContainer: {
@@ -146,6 +158,20 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     opacity: 0.97,
-    
+
   },
+  footerContainer: {
+    marginTop: windowHeight / 1.7,
+    borderTopColor: '#48319d',
+    borderTopWidth: 1,
+    height: 60,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  plusContainer: {
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
